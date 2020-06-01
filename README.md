@@ -3,13 +3,13 @@
 ## Train Bot
 
 ```BASH
-deno run --unstable --allow-read --allow-write src/train.ts
+deno run --unstable --allow-read --allow-write https://deno.page.link/train
 ```
 
 ## Play Bot
 
 ```BASH
-deno run --unstable --allow-read --allow-write src/play.ts
+deno run --unstable --allow-read --allow-write https://deno.page.link/play
 ```
 
 ## Run Tests
