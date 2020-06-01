@@ -26,6 +26,10 @@ export class PlayProgram {
       this.bot.memorize();
 
       return;
+    } else if (this.board.spaces.every((space) => space !== BoardSpace.Empty)) {
+      await Deno.stdout.write(new TextEncoder().encode(`It is a TIE! \n`));
+
+      return;
     }
 
     if (currentPlayer === BoardSpace.X) {
