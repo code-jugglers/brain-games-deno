@@ -36,7 +36,6 @@ Deno.test("should remember the initial moves it makes", () => {
     }
   }
 
-  const brain = new MockBotBrain();
   const bot = new Bot(new Board(), BoardSpace.X, new MockBotBrain());
 
   bot.makeMove(bot.determineMove() as RememberedMove);

@@ -15,5 +15,5 @@ deno run --unstable --allow-read --allow-write https://deno.page.link/play
 ## Run Tests
 
 ```BASH
-deno test src/*.spec.ts
+deno test --unstable src/*.spec.ts
 ```
