@@ -20,7 +20,7 @@ export class RememberedMove {
 export class BotBrain {
   gameStates: Record<string, RememberedMove[]>;
 
-  constructor(public savedFile = "game-states.json") {
+  constructor(public savedFile: string = `bot_${Date.now()}.json`) {
     try {
       this.gameStates = readJsonSync(this.savedFile) as Record<
         string,
@@ -37,19 +37,18 @@ export class BotBrain {
 }
 
 export class Bot {
-  private gameHistory: GameHistoryMove[] = [];
-  private brain = new BotBrain(this.brainPath);
+  public game_history: GameHistoryMove[] = [];
 
   constructor(
     private board: Board,
     public team: BoardSpace.X | BoardSpace.O,
-    private brainPath: string
+    public brain: BotBrain
   ) {}
 
   reset(board: Board) {
     this.board = board;
 
-    this.gameHistory = [];
+    this.game_history = [];
   }
 
   determineMove(): RememberedMove | null {
@@ -89,7 +88,7 @@ export class Bot {
   }
 
   makeMove(move: RememberedMove): void {
-    this.gameHistory.push(
+    this.game_history.push(
       new GameHistoryMove(move, this.team, this.board.key())
     );
 
@@ -97,7 +96,7 @@ export class Bot {
   }
 
   learn(winner: BoardSpace) {
-    for (let move of this.gameHistory) {
+    for (let move of this.game_history) {
       let moves = this.brain.gameStates[move.boardKey];
 
       const current = moves.find((brainMove) => {
@@ -114,7 +113,7 @@ export class Bot {
         winner === this.team ? 3 : winner === BoardSpace.Empty ? 0 : -1;
 
       if (moves.every((move) => move.count === 0)) {
-        moves.forEach((move: RememberedMove, index: number) => {
+        moves.forEach((move: RememberedMove) => {
           move.count = 3;
         });
       }

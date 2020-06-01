@@ -1,9 +1,9 @@
 import { Board, BoardSpace } from "./board.ts";
-import { Bot } from "./bot.ts";
+import { Bot, BotBrain } from "./bot.ts";
 
 let board = new Board();
-let engineX = new Bot(board, BoardSpace.X, "team_x_brain.json");
-let engineO = new Bot(board, BoardSpace.O, "team_o_brain.json");
+let engineX = new Bot(board, BoardSpace.X, new BotBrain("team_x_brain.json"));
+let engineO = new Bot(board, BoardSpace.O, new BotBrain("team_o_brain.json"));
 
 let xWins = 0;
 let oWins = 0;

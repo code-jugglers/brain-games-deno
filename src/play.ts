@@ -1,11 +1,11 @@
 import { Board, BoardSpace } from "./board.ts";
-import { Bot } from "./bot.ts";
+import { Bot, BotBrain } from "./bot.ts";
 
 export class PlayProgram {
   private bot: Bot = new Bot(
     this.board,
     BoardSpace.O,
-    `team_${this.bot_team}_brain.json`.toLowerCase()
+    new BotBrain(`team_${this.bot_team}_brain.json`.toLowerCase())
   );
 
   constructor(
