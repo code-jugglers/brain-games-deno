@@ -45,7 +45,7 @@ export class PlayProgram {
 
   async getUserMove(): Promise<number[]> {
     await Deno.stdout.write(
-      new TextEncoder().encode("Make your move (row,col): ")
+      new TextEncoder().encode("Make your move (col,row): ")
     );
 
     const buf = new Uint8Array(1024);
