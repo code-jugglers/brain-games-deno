@@ -3,14 +3,8 @@ import { resolve } from "https://deno.land/std@0.51.0/path/mod.ts";
 import { Board, BoardSpace } from "./board.ts";
 import { Bot } from "./bot.ts";
 
-const currentDir = new URL(".", import.meta.url).pathname;
-
 export class PlayProgram {
-  private bot: Bot = new Bot(
-    this.board,
-    BoardSpace.O,
-    resolve(currentDir, "../", "team_o_brain.json")
-  );
+  private bot: Bot = new Bot(this.board, BoardSpace.O, "team_o_brain.json");
 
   constructor(public board: Board) {
     this.play(BoardSpace.X);

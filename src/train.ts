@@ -1,23 +1,9 @@
-import { resolve } from "https://deno.land/std@0.51.0/path/mod.ts";
-
 import { Board, BoardSpace } from "./board.ts";
 import { Bot } from "./bot.ts";
 
-const currentDir = new URL(".", import.meta.url).pathname;
-
 let board = new Board();
-
-let engineX = new Bot(
-  board,
-  BoardSpace.X,
-  resolve(currentDir, "../team_x_brain.json")
-);
-
-let engineO = new Bot(
-  board,
-  BoardSpace.O,
-  resolve(currentDir, "../team_o_brain.json")
-);
+let engineX = new Bot(board, BoardSpace.X, "team_x_brain.json");
+let engineO = new Bot(board, BoardSpace.O, "team_o_brain.json");
 
 let xWins = 0;
 let oWins = 0;
