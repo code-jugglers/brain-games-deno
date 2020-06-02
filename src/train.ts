@@ -13,7 +13,7 @@ let xWins = 0;
 let oWins = 0;
 let catWins = 0;
 
-const iterations = 4000000;
+const iterations = 5000000;
 
 for (let i = 0; i < iterations; i++) {
   let winner = train(bot_x);
