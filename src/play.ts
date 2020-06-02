@@ -5,7 +5,7 @@ export class PlayProgram {
   private bot: Bot = new Bot(
     this.board,
     BoardSpace.O,
-    new BotBrain(`team_${this.bot_team}_brain.json`.toLowerCase())
+    new BotBrain(`team_a_brain.json`.toLowerCase())
   );
 
   constructor(

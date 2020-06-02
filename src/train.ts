@@ -2,17 +2,21 @@ import { Board, BoardSpace } from "./board.ts";
 import { Bot, BotBrain } from "./bot.ts";
 
 let board = new Board();
-let engineX = new Bot(board, BoardSpace.X, new BotBrain("team_x_brain.json"));
-let engineO = new Bot(board, BoardSpace.O, new BotBrain("team_o_brain.json"));
+
+let brain_a = new BotBrain("team_a_brain.json");
+let brain_b = new BotBrain("team_b_brain.json");
+
+let bot_x = new Bot(board, BoardSpace.X, brain_a);
+let bot_o = new Bot(board, BoardSpace.O, brain_b);
 
 let xWins = 0;
 let oWins = 0;
 let catWins = 0;
 
-const iterations = 3000000;
+const iterations = 4000000;
 
 for (let i = 0; i < iterations; i++) {
-  let winner = train(engineX);
+  let winner = train(bot_x);
 
   switch (winner) {
     case BoardSpace.X:
@@ -28,8 +32,8 @@ for (let i = 0; i < iterations; i++) {
       break;
   }
 
-  engineX.learn(winner);
-  engineO.learn(winner);
+  bot_x.learn(winner);
+  bot_o.learn(winner);
 
   if (i % 10000 === 0) {
     console.log(" ");
@@ -52,12 +56,21 @@ for (let i = 0; i < iterations; i++) {
   }
 
   board = new Board();
-  engineX.reset(board);
-  engineO.reset(board);
+
+  // switch brains half way through
+  if (i === iterations / 2) {
+    console.log("=========== SWITCHING BRAINS ==============");
+
+    bot_x = new Bot(board, BoardSpace.X, brain_b);
+    bot_o = new Bot(board, BoardSpace.O, brain_a);
+  } else {
+    bot_x.reset(board);
+    bot_o.reset(board);
+  }
 }
 
-engineX.memorize();
-engineO.memorize();
+bot_x.memorize();
+bot_o.memorize();
 
 function train(bot: Bot): BoardSpace {
   const winner = board.determineWinner();
@@ -74,5 +87,5 @@ function train(bot: Bot): BoardSpace {
     return winner;
   }
 
-  return train(bot.team === BoardSpace.X ? engineO : engineX);
+  return train(bot.team === BoardSpace.X ? bot_o : bot_x);
 }
