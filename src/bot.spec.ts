@@ -1,5 +1,4 @@
-import { assertEquals } from "https://deno.land/std/testing/asserts.ts";
-
+import { assertEquals } from "./deps.ts";
 import { Bot, BotBrain, RememberedMove } from "./bot.ts";
 import { Board, BoardSpace } from "./board.ts";
 

@@ -1,8 +1,4 @@
-import {
-  readJsonSync,
-  writeJsonSync,
-} from "https://deno.land/std@0.51.0/fs/mod.ts";
-
+import { readJsonSync, writeJsonSync } from "./deps.ts";
 import { Board, BoardSpace } from "./board.ts";
 
 export class GameHistoryMove {
