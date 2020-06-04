@@ -19,19 +19,25 @@ for (let i = 0; i < iterations; i++) {
   switch (winner) {
     case GameResult.WinX:
       xWins += 1;
+
+      bot_x.learn(true);
+      bot_o.learn(false);
+
       break;
 
     case GameResult.WinO:
       oWins += 1;
+
+      bot_x.learn(false);
+      bot_o.learn(true);
+
       break;
 
     case GameResult.Tie:
       catWins += 1;
+
       break;
   }
-
-  bot_x.learn(winner === GameResult.WinX);
-  bot_o.learn(winner === GameResult.WinO);
 
   if (i % 10000 === 0) {
     console.log(" ");
