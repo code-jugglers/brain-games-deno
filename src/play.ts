@@ -77,16 +77,15 @@ const answer = new TextDecoder()
   .toUpperCase()
   .trim();
 
-let program: PlayProgram;
+let program = new PlayProgram(new Board(), BoardSpace.X, BoardSpace.O);
 
 if (answer === "O") {
   console.log(`You will be O. Good Luck.`);
 
-  program = new PlayProgram(new Board(), BoardSpace.O, BoardSpace.X);
+  program.player_team = BoardSpace.O;
+  program.bot_team = BoardSpace.X;
 } else {
   console.log(`You will be X. Good Luck.`);
-
-  program = new PlayProgram(new Board(), BoardSpace.X, BoardSpace.O);
 }
 
 program.play(BoardSpace.X);

@@ -91,7 +91,7 @@ export class Bot {
     this.board.setByIndex(move.index, this.team);
   }
 
-  learn(winner: BoardSpace) {
+  learn(didIWin: boolean) {
     for (let move of this.game_history) {
       let moves = this.brain.gameStates[move.boardKey];
 
@@ -105,8 +105,7 @@ export class Bot {
         );
       }
 
-      current.count +=
-        winner === this.team ? 3 : winner === BoardSpace.Empty ? 0 : -1;
+      current.count += didIWin ? 3 : -1;
 
       if (moves.every((move) => move.count === 0)) {
         moves.forEach((move: RememberedMove) => {

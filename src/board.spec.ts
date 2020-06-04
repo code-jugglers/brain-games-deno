@@ -1,14 +1,16 @@
-import { assertEquals } from "./deps.ts";
+import { assertEquals } from "./deps_testing.ts";
 import { Board, BoardSpace } from "./board.ts";
 
-Deno.test("should initialize with an empty board", () => {
+const { test } = Deno;
+
+test("should initialize with an empty board", () => {
   const board = new Board();
 
   assertEquals(board.spaces, [".", ".", ".", ".", ".", ".", ".", ".", "."]);
   assertEquals(board.key(), ".........");
 });
 
-Deno.test("should set a space on the board based on row and column", () => {
+test("should set a space on the board based on row and column", () => {
   const board = new Board();
 
   board.set(0, 0, BoardSpace.X);
@@ -29,7 +31,7 @@ Deno.test("should set a space on the board based on row and column", () => {
   assertEquals(board.key(), "X...O....");
 });
 
-Deno.test("should set a space on the board based on an index", () => {
+test("should set a space on the board based on an index", () => {
   const board = new Board();
 
   board.setByIndex(0, BoardSpace.X);
@@ -50,7 +52,7 @@ Deno.test("should set a space on the board based on an index", () => {
   assertEquals(board.key(), "XO.......");
 });
 
-Deno.test("x should win on top row", () => {
+test("x should win on top row", () => {
   const board = new Board();
 
   board.set(0, 0, BoardSpace.X);
@@ -60,7 +62,7 @@ Deno.test("x should win on top row", () => {
   assertEquals(board.determineWinner(), BoardSpace.X);
 });
 
-Deno.test("x should win on the middle row", () => {
+test("x should win on the middle row", () => {
   const board = new Board();
 
   board.set(1, 0, BoardSpace.X);
@@ -70,7 +72,7 @@ Deno.test("x should win on the middle row", () => {
   assertEquals(board.determineWinner(), BoardSpace.X);
 });
 
-Deno.test("x should win on the bottom row", () => {
+test("x should win on the bottom row", () => {
   const board = new Board();
 
   board.set(2, 0, BoardSpace.X);
@@ -80,7 +82,7 @@ Deno.test("x should win on the bottom row", () => {
   assertEquals(board.determineWinner(), BoardSpace.X);
 });
 
-Deno.test("x should win diagonally R -> L", () => {
+test("x should win diagonally R -> L", () => {
   const board = new Board();
 
   board.set(0, 0, BoardSpace.X);
@@ -90,7 +92,7 @@ Deno.test("x should win diagonally R -> L", () => {
   assertEquals(board.determineWinner(), BoardSpace.X);
 });
 
-Deno.test("x should win diagonally L -> R", () => {
+test("x should win diagonally L -> R", () => {
   const board = new Board();
 
   board.set(0, 2, BoardSpace.X);

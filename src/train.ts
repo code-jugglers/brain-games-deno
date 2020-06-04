@@ -1,13 +1,12 @@
-import { Board, BoardSpace } from "./board.ts";
+import { Board, BoardSpace, GameResult } from "./board.ts";
 import { Bot, BotBrain } from "./bot.ts";
 
 let board = new Board();
 
-let brain_a = new BotBrain("team_a_brain.json");
-let brain_b = new BotBrain("team_b_brain.json");
-
-let bot_x = new Bot(board, BoardSpace.X, brain_a);
-let bot_o = new Bot(board, BoardSpace.O, brain_b);
+const brain_a = new BotBrain("team_a_brain.json");
+const brain_b = new BotBrain("team_b_brain.json");
+const bot_x = new Bot(board, BoardSpace.X, brain_a);
+const bot_o = new Bot(board, BoardSpace.O, brain_b);
 
 let xWins = 0;
 let oWins = 0;
@@ -19,21 +18,21 @@ for (let i = 0; i < iterations; i++) {
   let winner = train(bot_x);
 
   switch (winner) {
-    case BoardSpace.X:
+    case GameResult.WinX:
       xWins += 1;
       break;
 
-    case BoardSpace.O:
+    case GameResult.WinO:
       oWins += 1;
       break;
 
-    case BoardSpace.Empty:
+    case GameResult.Tie:
       catWins += 1;
       break;
   }
 
-  bot_x.learn(winner);
-  bot_o.learn(winner);
+  bot_x.learn(winner === GameResult.WinX);
+  bot_o.learn(winner === GameResult.WinO);
 
   if (i % 10000 === 0) {
     console.log(" ");
@@ -56,26 +55,25 @@ for (let i = 0; i < iterations; i++) {
   }
 
   board = new Board();
+  bot_x.reset(board);
+  bot_o.reset(board);
 
-  // switch brains half way through
+  // switch brains half way through. This makes sure brains play both X and O
   if (i === iterations / 2) {
     console.log("=========== SWITCHING BRAINS ==============");
 
-    bot_x = new Bot(board, BoardSpace.X, brain_b);
-    bot_o = new Bot(board, BoardSpace.O, brain_a);
-  } else {
-    bot_x.reset(board);
-    bot_o.reset(board);
+    bot_x.brain = brain_b;
+    bot_o.brain = brain_a;
   }
 }
 
 bot_x.memorize();
 bot_o.memorize();
 
-function train(bot: Bot): BoardSpace {
+function train(bot: Bot): GameResult {
   const winner = board.determineWinner();
 
-  if (winner !== BoardSpace.Empty) {
+  if (winner !== GameResult.Incomplete) {
     return winner;
   }
 

@@ -4,6 +4,13 @@ export enum BoardSpace {
   Empty = ".",
 }
 
+export enum GameResult {
+  WinX,
+  WinO,
+  Tie,
+  Incomplete,
+}
+
 export class Board {
   private readonly cols = 3;
   private readonly rows = 3;
@@ -38,38 +45,52 @@ export class Board {
     }, "");
   }
 
-  determineWinner() {
+  determineWinner(): GameResult {
     const squares = this.spaces;
 
     if (this.checkBoard(0, 1, 2)) {
       // row 1
-      return squares[0];
+      return this.boardSpaceToResult(squares[0]);
     } else if (this.checkBoard(3, 4, 5)) {
       // row 2
-      return squares[3];
+      return this.boardSpaceToResult(squares[3]);
     } else if (this.checkBoard(6, 7, 8)) {
       // row3
-      return squares[6];
+      return this.boardSpaceToResult(squares[6]);
     } else if (this.checkBoard(0, 3, 6)) {
       // col 1
-      return squares[0];
+      return this.boardSpaceToResult(squares[0]);
     } else if (this.checkBoard(1, 4, 7)) {
       // col 2
-      return squares[1];
+      return this.boardSpaceToResult(squares[1]);
     } else if (this.checkBoard(2, 5, 8)) {
       // col 3
-      return squares[2];
+      return this.boardSpaceToResult(squares[2]);
     } else if (this.checkBoard(0, 4, 8)) {
       // Diagonal top-left > bottom-right
-      return squares[0];
+      return this.boardSpaceToResult(squares[0]);
     } else if (this.checkBoard(2, 4, 6)) {
       // Diagonal top-right > bottom-left
-      return squares[2];
+      return this.boardSpaceToResult(squares[2]);
     } else if (squares.every((square) => square !== BoardSpace.Empty)) {
-      return BoardSpace.Empty;
+      // Every space is full and no winner was found above
+      return GameResult.Tie;
     }
 
-    return BoardSpace.Empty;
+    return GameResult.Incomplete;
+  }
+
+  private boardSpaceToResult(space: BoardSpace): GameResult {
+    switch (space) {
+      case BoardSpace.X:
+        return GameResult.WinX;
+
+      case BoardSpace.O:
+        return GameResult.WinO;
+
+      case BoardSpace.Empty:
+        return GameResult.Incomplete;
+    }
   }
 
   private checkBoard(first: number, second: number, third: number): boolean {
