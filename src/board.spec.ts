@@ -72,7 +72,7 @@ test("x should win on top row", () => {
   board.set(0, 1, BoardSpace.X);
   board.set(0, 2, BoardSpace.X);
 
-  assertEquals(board.determineWinner(), GameResult.WinX);
+  assertEquals(board.determine_result(), GameResult.WinX);
 });
 
 test("x should win on the middle row", () => {
@@ -82,7 +82,7 @@ test("x should win on the middle row", () => {
   board.set(1, 1, BoardSpace.X);
   board.set(1, 2, BoardSpace.X);
 
-  assertEquals(board.determineWinner(), GameResult.WinX);
+  assertEquals(board.determine_result(), GameResult.WinX);
 });
 
 test("x should win on the bottom row", () => {
@@ -92,9 +92,9 @@ test("x should win on the bottom row", () => {
   board.set(2, 1, BoardSpace.X);
   board.set(2, 2, BoardSpace.X);
 
-  console.log(board.determineWinner());
+  console.log(board.determine_result());
 
-  assertEquals(board.determineWinner(), GameResult.WinX);
+  assertEquals(board.determine_result(), GameResult.WinX);
 });
 
 test("x should win diagonally R -> L", () => {
@@ -104,7 +104,7 @@ test("x should win diagonally R -> L", () => {
   board.set(1, 1, BoardSpace.X);
   board.set(2, 2, BoardSpace.X);
 
-  assertEquals(board.determineWinner(), GameResult.WinX);
+  assertEquals(board.determine_result(), GameResult.WinX);
 });
 
 test("x should win diagonally L -> R", () => {
@@ -114,5 +114,5 @@ test("x should win diagonally L -> R", () => {
   board.set(1, 1, BoardSpace.X);
   board.set(2, 0, BoardSpace.X);
 
-  assertEquals(board.determineWinner(), GameResult.WinX);
+  assertEquals(board.determine_result(), GameResult.WinX);
 });

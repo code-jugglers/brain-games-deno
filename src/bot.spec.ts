@@ -1,5 +1,5 @@
 import { assertEquals } from "./deps_testing.ts";
-import { Bot, BotBrain, RememberedMove } from "./bot.ts";
+import { Bot, BotBrain, Move } from "./bot.ts";
 import { Board, BoardSpace } from "./board.ts";
 
 const { test } = Deno;
@@ -7,9 +7,9 @@ const { test } = Deno;
 test("should remember the moves it makes in a game", () => {
   const bot = new Bot(new Board(), BoardSpace.X, new BotBrain());
 
-  bot.makeMove(bot.determineMove() as RememberedMove);
-  bot.makeMove(bot.determineMove() as RememberedMove);
-  bot.makeMove(bot.determineMove() as RememberedMove);
+  bot.make_move(bot.determine_move() as Move);
+  bot.make_move(bot.determine_move() as Move);
+  bot.make_move(bot.determine_move() as Move);
 
   assertEquals(bot.game_history.length, 3);
 
@@ -22,7 +22,7 @@ test("should remember the moves it makes in a game", () => {
 test("should remember the initial moves it makes", () => {
   class MockBotBrain implements BotBrain {
     savedFile = "hello-world.json";
-    gameStates: Record<string, RememberedMove[]> = {};
+    gameStates: Record<string, Move[]> = {};
     memorize() {
       assertEquals(this.gameStates["........."].length, 9);
 
@@ -34,6 +34,6 @@ test("should remember the initial moves it makes", () => {
 
   const bot = new Bot(new Board(), BoardSpace.X, new MockBotBrain());
 
-  bot.makeMove(bot.determineMove() as RememberedMove);
+  bot.make_move(bot.determine_move() as Move);
   bot.memorize();
 });
