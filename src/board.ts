@@ -14,6 +14,8 @@ export enum GameResult {
 export class Board {
   private readonly cols = 3;
   private readonly rows = 3;
+  private readonly visual_cache = new Map<string, string>();
+  private readonly result_cache = new Map<string, GameResult>();
 
   spaces: BoardSpace[] = this.createSpaces();
 
@@ -35,8 +37,14 @@ export class Board {
     return this.spaces.join("");
   }
 
-  createVisual(): string {
-    return this.spaces.reduce((b, team, i) => {
+  create_visual(): string {
+    const key = this.key();
+
+    if (this.visual_cache.has(key)) {
+      return this.visual_cache.get(key) as string;
+    }
+
+    const visual = this.spaces.reduce((b, team, i) => {
       if (!(i % 3)) {
         b += "\n";
       }
@@ -45,41 +53,54 @@ export class Board {
 
       return b;
     }, "");
+
+    this.visual_cache.set(key, visual);
+
+    return visual;
   }
 
-  determineResult(): GameResult {
+  determine_result(): GameResult {
     const squares = this.spaces;
+    const key = this.key();
+
+    if (this.result_cache.has(key)) {
+      return this.result_cache.get(key) as GameResult;
+    }
+
+    let result: GameResult = GameResult.Incomplete;
 
     if (this.checkBoard(0, 1, 2)) {
       // row 1
-      return this.boardSpaceToResult(squares[0]);
+      result = this.boardSpaceToResult(squares[0]);
     } else if (this.checkBoard(3, 4, 5)) {
       // row 2
-      return this.boardSpaceToResult(squares[3]);
+      result = this.boardSpaceToResult(squares[3]);
     } else if (this.checkBoard(6, 7, 8)) {
       // row3
-      return this.boardSpaceToResult(squares[6]);
+      result = this.boardSpaceToResult(squares[6]);
     } else if (this.checkBoard(0, 3, 6)) {
       // col 1
-      return this.boardSpaceToResult(squares[0]);
+      result = this.boardSpaceToResult(squares[0]);
     } else if (this.checkBoard(1, 4, 7)) {
       // col 2
-      return this.boardSpaceToResult(squares[1]);
+      result = this.boardSpaceToResult(squares[1]);
     } else if (this.checkBoard(2, 5, 8)) {
       // col 3
-      return this.boardSpaceToResult(squares[2]);
+      result = this.boardSpaceToResult(squares[2]);
     } else if (this.checkBoard(0, 4, 8)) {
       // Diagonal top-left > bottom-right
-      return this.boardSpaceToResult(squares[0]);
+      result = this.boardSpaceToResult(squares[0]);
     } else if (this.checkBoard(2, 4, 6)) {
       // Diagonal top-right > bottom-left
-      return this.boardSpaceToResult(squares[2]);
+      result = this.boardSpaceToResult(squares[2]);
     } else if (squares.every((square) => square !== BoardSpace.Empty)) {
       // Every space is full and no winner was found above
-      return GameResult.Tie;
+      result = GameResult.Tie;
     }
 
-    return GameResult.Incomplete;
+    this.result_cache.set(key, result);
+
+    return result;
   }
 
   private boardSpaceToResult(space: BoardSpace): GameResult {

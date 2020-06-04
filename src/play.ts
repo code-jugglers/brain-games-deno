@@ -15,10 +15,10 @@ export class PlayProgram {
   ) {}
 
   async play(current_player: BoardSpace) {
-    console.log(this.board.createVisual());
+    console.log(this.board.create_visual());
     console.log(" ");
 
-    const result = this.board.determineResult();
+    const result = this.board.determine_result();
 
     if (result !== GameResult.Incomplete) {
       if (result === GameResult.Tie) {
@@ -35,16 +35,14 @@ export class PlayProgram {
 
       this.board.set(move[1], move[0], this.player_team);
     } else {
-      const move = this.bot.determineMove();
+      const move = this.bot.determine_move();
 
       if (move) {
         this.board.setByIndex(move.index, this.bot_team);
       }
     }
 
-    this.play(
-      current_player === this.player_team ? this.bot_team : this.player_team
-    );
+    this.play(current_player === BoardSpace.X ? BoardSpace.O : BoardSpace.X);
   }
 
   async getUserMove(): Promise<number[]> {

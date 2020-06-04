@@ -11,7 +11,7 @@ let xWins = 0;
 let oWins = 0;
 let catWins = 0;
 
-const iterations = 5000000;
+const iterations = 3000000;
 
 for (let i = 0; i < iterations; i++) {
   let winner = train(bot_x);
@@ -43,7 +43,7 @@ for (let i = 0; i < iterations; i++) {
     console.log(" ");
     console.log(`=========== Game ${i + 1} ==============`);
 
-    console.log(board.createVisual());
+    console.log(board.create_visual());
 
     console.log("X:    ", xWins);
     console.log("O:    ", oWins);
@@ -52,7 +52,7 @@ for (let i = 0; i < iterations; i++) {
     console.log(" ");
     console.log("=========== FINAL ==============");
 
-    console.log(board.createVisual());
+    console.log(board.create_visual());
 
     console.log("X:    ", xWins);
     console.log("O:    ", oWins);
@@ -76,16 +76,16 @@ bot_x.memorize();
 bot_o.memorize();
 
 function train(bot: Bot): GameResult {
-  const winner = board.determineResult();
+  const winner = board.determine_result();
 
   if (winner !== GameResult.Incomplete) {
     return winner;
   }
 
-  const move = bot.determineMove();
+  const move = bot.determine_move();
 
   if (move) {
-    bot.makeMove(move);
+    bot.make_move(move);
   } else {
     return winner;
   }

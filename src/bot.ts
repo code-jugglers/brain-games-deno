@@ -1,27 +1,24 @@
 import { readJsonSync, writeJsonSync } from "./deps.ts";
 import { Board, BoardSpace } from "./board.ts";
 
-export class GameHistoryMove {
+export class HistoricalMove {
   constructor(
-    public move: RememberedMove,
+    public move: Move,
     public team: BoardSpace,
     public boardKey: string
   ) {}
 }
 
-export class RememberedMove {
+export class Move {
   constructor(public index: number, public count: number) {}
 }
 
 export class BotBrain {
-  gameStates: Record<string, RememberedMove[]>;
+  gameStates: Record<string, Move[]>;
 
   constructor(public savedFile: string = `bot_${Date.now()}.json`) {
     try {
-      this.gameStates = readJsonSync(this.savedFile) as Record<
-        string,
-        RememberedMove[]
-      >;
+      this.gameStates = readJsonSync(this.savedFile) as Record<string, Move[]>;
     } catch {
       this.gameStates = {};
     }
@@ -33,7 +30,7 @@ export class BotBrain {
 }
 
 export class Bot {
-  public game_history: GameHistoryMove[] = [];
+  public game_history: HistoricalMove[] = [];
 
   constructor(
     private board: Board,
@@ -47,24 +44,24 @@ export class Bot {
     this.game_history = [];
   }
 
-  determineMove(): RememberedMove | null {
+  determine_move(): Move | null {
     // based on probability, select the best available move for the given team
     const memory = this.brain.gameStates[this.board.key()];
-    const availMoves = memory ? memory : this.getAvailableMoves();
+    const availMoves = memory ? memory : this.get_available_moves();
 
     // If the brain hasn't seen this board state before, save it
     if (!memory) {
       this.brain.gameStates[this.board.key()] = availMoves;
     }
 
-    return this.pickRandomPercentage(availMoves);
+    return this.pick_random_percentage(availMoves);
   }
 
-  pickRandomPercentage(counts: Array<RememberedMove>): RememberedMove | null {
+  pick_random_percentage(counts: Move[]): Move | null {
     const total = counts.reduce((s, m) => s + m.count, 0);
 
     let random = Math.floor(Math.random() * total) + 1; // Random inclusive between 1 and total
-    let move: RememberedMove;
+    let move: Move;
 
     for (let i = 0; i < counts.length; i++) {
       move = counts[i];
@@ -83,21 +80,22 @@ export class Bot {
     return null;
   }
 
-  makeMove(move: RememberedMove): void {
+  make_move(move: Move): void {
     this.game_history.push(
-      new GameHistoryMove(move, this.team, this.board.key())
+      new HistoricalMove(move, this.team, this.board.key())
     );
 
     this.board.setByIndex(move.index, this.team);
   }
 
   learn(didIWin: boolean) {
-    for (let move of this.game_history) {
+    for (let i = 0; i < this.game_history.length; i++) {
+      let move = this.game_history[i];
       let moves = this.brain.gameStates[move.boardKey];
 
-      const current = moves.find((brainMove) => {
-        return brainMove.index === move.move.index;
-      });
+      const current = moves.find(
+        (brainMove) => brainMove.index === move.move.index
+      );
 
       if (!current) {
         throw new Error(
@@ -107,8 +105,13 @@ export class Bot {
 
       current.count += didIWin ? 3 : -1;
 
+      if (didIWin && i === this.game_history.length - 1) {
+        current.count += 100;
+      }
+
+      // Don't let the bot die
       if (moves.every((move) => move.count === 0)) {
-        moves.forEach((move: RememberedMove) => {
+        moves.forEach((move: Move) => {
           move.count = 3;
         });
       }
@@ -119,13 +122,13 @@ export class Bot {
     this.brain.memorize();
   }
 
-  getAvailableMoves(): RememberedMove[] {
+  get_available_moves(): Move[] {
     const length = this.board.spaces.length;
-    const moves: RememberedMove[] = [];
+    const moves: Move[] = [];
 
     for (let i = 0; i < length; i++) {
       if (this.board.spaces[i] === BoardSpace.Empty) {
-        moves.push(new RememberedMove(i, 3));
+        moves.push(new Move(i, 3));
       }
     }
 
