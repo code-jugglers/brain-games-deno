@@ -38,9 +38,7 @@ export class Bot {
     public brain: BotBrain
   ) {}
 
-  reset(board: Board) {
-    this.board = board;
-
+  reset() {
     this.game_history = [];
   }
 
@@ -103,10 +101,13 @@ export class Bot {
         );
       }
 
-      current.count += didIWin ? 3 : -1;
+      if (didIWin) {
+        const isLastMove = i === this.game_history.length;
 
-      if (didIWin && i === this.game_history.length - 1) {
-        current.count += 100;
+        // If the bot won that means the last move it made was the winning move
+        current.count += isLastMove ? 100 : 3;
+      } else {
+        current.count -= 1;
       }
 
       // Don't let the bot die

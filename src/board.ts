@@ -60,45 +60,50 @@ export class Board {
   }
 
   determine_result(): GameResult {
-    const squares = this.spaces;
     const key = this.key();
 
     if (this.result_cache.has(key)) {
       return this.result_cache.get(key) as GameResult;
     }
 
+    let result: GameResult = this.find_result();
+
+    this.result_cache.set(key, result);
+
+    return result;
+  }
+
+  private find_result(): GameResult {
     let result: GameResult = GameResult.Incomplete;
 
     if (this.checkBoard(0, 1, 2)) {
       // row 1
-      result = this.boardSpaceToResult(squares[0]);
+      result = this.boardSpaceToResult(this.spaces[0]);
     } else if (this.checkBoard(3, 4, 5)) {
       // row 2
-      result = this.boardSpaceToResult(squares[3]);
+      result = this.boardSpaceToResult(this.spaces[3]);
     } else if (this.checkBoard(6, 7, 8)) {
       // row3
-      result = this.boardSpaceToResult(squares[6]);
+      result = this.boardSpaceToResult(this.spaces[6]);
     } else if (this.checkBoard(0, 3, 6)) {
       // col 1
-      result = this.boardSpaceToResult(squares[0]);
+      result = this.boardSpaceToResult(this.spaces[0]);
     } else if (this.checkBoard(1, 4, 7)) {
       // col 2
-      result = this.boardSpaceToResult(squares[1]);
+      result = this.boardSpaceToResult(this.spaces[1]);
     } else if (this.checkBoard(2, 5, 8)) {
       // col 3
-      result = this.boardSpaceToResult(squares[2]);
+      result = this.boardSpaceToResult(this.spaces[2]);
     } else if (this.checkBoard(0, 4, 8)) {
       // Diagonal top-left > bottom-right
-      result = this.boardSpaceToResult(squares[0]);
+      result = this.boardSpaceToResult(this.spaces[0]);
     } else if (this.checkBoard(2, 4, 6)) {
       // Diagonal top-right > bottom-left
-      result = this.boardSpaceToResult(squares[2]);
-    } else if (squares.every((square) => square !== BoardSpace.Empty)) {
+      result = this.boardSpaceToResult(this.spaces[2]);
+    } else if (this.spaces.every((space) => space !== BoardSpace.Empty)) {
       // Every space is full and no winner was found above
       result = GameResult.Tie;
     }
-
-    this.result_cache.set(key, result);
 
     return result;
   }

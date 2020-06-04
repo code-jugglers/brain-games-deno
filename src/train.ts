@@ -11,7 +11,7 @@ let xWins = 0;
 let oWins = 0;
 let catWins = 0;
 
-const iterations = 3000000;
+const iterations = 5000000;
 
 for (let i = 0; i < iterations; i++) {
   let winner = train(bot_x);
@@ -43,7 +43,7 @@ for (let i = 0; i < iterations; i++) {
     console.log(" ");
     console.log(`=========== Game ${i + 1} ==============`);
 
-    console.log(board.create_visual());
+    console.log(board.create_visual() + "\n");
 
     console.log("X:    ", xWins);
     console.log("O:    ", oWins);
@@ -52,7 +52,7 @@ for (let i = 0; i < iterations; i++) {
     console.log(" ");
     console.log("=========== FINAL ==============");
 
-    console.log(board.create_visual());
+    console.log(board.create_visual() + "\n");
 
     console.log("X:    ", xWins);
     console.log("O:    ", oWins);
@@ -60,8 +60,8 @@ for (let i = 0; i < iterations; i++) {
   }
 
   board.reset();
-  bot_x.reset(board);
-  bot_o.reset(board);
+  bot_x.reset();
+  bot_o.reset();
 
   // switch brains half way through. This makes sure brains play both X and O
   if (i === iterations / 2) {
