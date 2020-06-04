@@ -20,4 +20,4 @@ jobs:
           deno-version: v1.x
 
       - name: Run Tests
-        run: deno test **/*.spec.ts
+        run: deno test --unstable **/*.spec.ts
