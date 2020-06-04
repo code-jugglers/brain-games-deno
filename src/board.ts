@@ -47,7 +47,7 @@ export class Board {
     }, "");
   }
 
-  determineWinner(): GameResult {
+  determineResult(): GameResult {
     const squares = this.spaces;
 
     if (this.checkBoard(0, 1, 2)) {

@@ -2,8 +2,8 @@ import { Board, BoardSpace, GameResult } from "./board.ts";
 import { Bot, BotBrain } from "./bot.ts";
 
 const board = new Board();
-const brain_a = new BotBrain("team_a_brain.json");
-const brain_b = new BotBrain("team_b_brain.json");
+const brain_a = new BotBrain("bot_a_brain.json");
+const brain_b = new BotBrain("bot_b_brain.json");
 const bot_x = new Bot(board, BoardSpace.X, brain_a);
 const bot_o = new Bot(board, BoardSpace.O, brain_b);
 
@@ -76,7 +76,7 @@ bot_x.memorize();
 bot_o.memorize();
 
 function train(bot: Bot): GameResult {
-  const winner = board.determineWinner();
+  const winner = board.determineResult();
 
   if (winner !== GameResult.Incomplete) {
     return winner;

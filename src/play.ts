@@ -1,37 +1,31 @@
-import { Board, BoardSpace } from "./board.ts";
+import { Board, BoardSpace, GameResult } from "./board.ts";
 import { Bot, BotBrain } from "./bot.ts";
 
 export class PlayProgram {
   private bot: Bot = new Bot(
     this.board,
-    BoardSpace.O,
-    new BotBrain(`team_a_brain.json`.toLowerCase())
+    this.bot_team,
+    new BotBrain("bot_a_brain.json")
   );
 
   constructor(
     public board: Board,
-    public player_team: BoardSpace,
-    public bot_team: BoardSpace
+    public player_team: BoardSpace.X | BoardSpace.O,
+    public bot_team: BoardSpace.X | BoardSpace.O
   ) {}
 
   async play(current_player: BoardSpace) {
     console.log(this.board.createVisual());
     console.log(" ");
 
-    const winner = this.board.determineWinner();
+    const result = this.board.determineResult();
 
-    if (winner !== BoardSpace.Empty) {
-      await Deno.stdout.write(
-        new TextEncoder().encode(`Team ${winner} Wins! \n`)
-      );
-
-      this.bot.learn(winner);
-
-      this.bot.memorize();
-
-      return;
-    } else if (this.board.spaces.every((space) => space !== BoardSpace.Empty)) {
-      await Deno.stdout.write(new TextEncoder().encode(`It is a TIE! \n`));
+    if (result !== GameResult.Incomplete) {
+      if (result === GameResult.Tie) {
+        console.log("It is a TIE!");
+      } else {
+        console.log(`${result === GameResult.WinX ? "X" : "O"} Wins!`);
+      }
 
       return;
     }
