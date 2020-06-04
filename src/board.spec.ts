@@ -31,6 +31,19 @@ test("should set a space on the board based on row and column", () => {
   assertEquals(board.key(), "X...O....");
 });
 
+test("should reset the board to empty", () => {
+  const board = new Board();
+
+  board.setByIndex(0, BoardSpace.X);
+  board.setByIndex(1, BoardSpace.O);
+  board.setByIndex(2, BoardSpace.X);
+
+  board.reset();
+
+  assertEquals(board.spaces, [".", ".", ".", ".", ".", ".", ".", ".", "."]);
+  assertEquals(board.key(), ".........");
+});
+
 test("should set a space on the board based on an index", () => {
   const board = new Board();
 

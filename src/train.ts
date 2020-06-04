@@ -1,8 +1,7 @@
 import { Board, BoardSpace, GameResult } from "./board.ts";
 import { Bot, BotBrain } from "./bot.ts";
 
-let board = new Board();
-
+const board = new Board();
 const brain_a = new BotBrain("team_a_brain.json");
 const brain_b = new BotBrain("team_b_brain.json");
 const bot_x = new Bot(board, BoardSpace.X, brain_a);
@@ -54,7 +53,7 @@ for (let i = 0; i < iterations; i++) {
     console.log("DRAW: ", catWins);
   }
 
-  board = new Board();
+  board.reset();
   bot_x.reset(board);
   bot_o.reset(board);
 

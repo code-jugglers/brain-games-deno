@@ -15,9 +15,7 @@ export class Board {
   private readonly cols = 3;
   private readonly rows = 3;
 
-  spaces: BoardSpace[] = new Array(this.cols * this.rows).fill(
-    BoardSpace.Empty
-  );
+  spaces: BoardSpace[] = this.createSpaces();
 
   set(row: number, col: number, team: BoardSpace) {
     const i = row * 3 + col;
@@ -27,6 +25,10 @@ export class Board {
 
   setByIndex(index: number, team: BoardSpace) {
     this.spaces[index] = team;
+  }
+
+  reset() {
+    this.spaces = this.createSpaces();
   }
 
   key() {
@@ -91,6 +93,10 @@ export class Board {
       case BoardSpace.Empty:
         return GameResult.Incomplete;
     }
+  }
+
+  private createSpaces() {
+    return new Array(this.cols * this.rows).fill(BoardSpace.Empty);
   }
 
   private checkBoard(first: number, second: number, third: number): boolean {
