@@ -1,5 +1,5 @@
 import { assertEquals } from "./deps_testing.ts";
-import { Board, BoardSpace } from "./board.ts";
+import { Board, BoardSpace, GameResult } from "./board.ts";
 
 const { test } = Deno;
 
@@ -59,7 +59,7 @@ test("x should win on top row", () => {
   board.set(0, 1, BoardSpace.X);
   board.set(0, 2, BoardSpace.X);
 
-  assertEquals(board.determineWinner(), BoardSpace.X);
+  assertEquals(board.determineWinner(), GameResult.WinX);
 });
 
 test("x should win on the middle row", () => {
@@ -69,7 +69,7 @@ test("x should win on the middle row", () => {
   board.set(1, 1, BoardSpace.X);
   board.set(1, 2, BoardSpace.X);
 
-  assertEquals(board.determineWinner(), BoardSpace.X);
+  assertEquals(board.determineWinner(), GameResult.WinX);
 });
 
 test("x should win on the bottom row", () => {
@@ -79,7 +79,9 @@ test("x should win on the bottom row", () => {
   board.set(2, 1, BoardSpace.X);
   board.set(2, 2, BoardSpace.X);
 
-  assertEquals(board.determineWinner(), BoardSpace.X);
+  console.log(board.determineWinner());
+
+  assertEquals(board.determineWinner(), GameResult.WinX);
 });
 
 test("x should win diagonally R -> L", () => {
@@ -89,7 +91,7 @@ test("x should win diagonally R -> L", () => {
   board.set(1, 1, BoardSpace.X);
   board.set(2, 2, BoardSpace.X);
 
-  assertEquals(board.determineWinner(), BoardSpace.X);
+  assertEquals(board.determineWinner(), GameResult.WinX);
 });
 
 test("x should win diagonally L -> R", () => {
@@ -99,5 +101,5 @@ test("x should win diagonally L -> R", () => {
   board.set(1, 1, BoardSpace.X);
   board.set(2, 0, BoardSpace.X);
 
-  assertEquals(board.determineWinner(), BoardSpace.X);
+  assertEquals(board.determineWinner(), GameResult.WinX);
 });
