@@ -31,5 +31,5 @@ deno run --unstable --allow-read --allow-write ./play.ts
 ### Run Tests
 
 ```BASH
-deno test --unstable src/*.spec.ts
+deno test --unstable
 ```
