@@ -1,11 +1,13 @@
-import { assertEquals } from "./deps_testing.ts";
+import { assertEquals } from "https://deno.land/std@0.55.0/testing/asserts.ts";
+
 import { Bot, BotBrain, Move } from "./bot.ts";
 import { Board, BoardSpace } from "./board.ts";
+import { Io } from "./io.ts";
 
 const { test } = Deno;
 
 test("should remember the moves it makes in a game", () => {
-  const bot = new Bot(new Board(), BoardSpace.X, new BotBrain());
+  const bot = new Bot(new Board(), BoardSpace.X, new BotBrain("", {} as Io));
 
   bot.make_move(bot.determine_move() as Move);
   bot.make_move(bot.determine_move() as Move);
@@ -20,9 +22,14 @@ test("should remember the moves it makes in a game", () => {
 });
 
 test("should remember the initial moves it makes", () => {
-  class MockBotBrain implements BotBrain {
+  class MockBotBrain extends BotBrain {
     savedFile = "hello-world.json";
     gameStates: Record<string, Move[]> = {};
+
+    constructor() {
+      super("", {} as Io);
+    }
+
     memorize() {
       assertEquals(this.gameStates["........."].length, 9);
 

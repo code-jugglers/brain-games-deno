@@ -1,7 +1,7 @@
-import { readJsonSync, writeJsonSync } from "./deps.ts";
 import { Board, BoardSpace } from "./board.ts";
+import { Io } from "./io.ts";
 
-export class HistoricalMove {
+export class HistoryEntry {
   constructor(
     public move: Move,
     public team: BoardSpace,
@@ -16,21 +16,26 @@ export class Move {
 export class BotBrain {
   gameStates: Record<string, Move[]>;
 
-  constructor(public savedFile: string = `bot_${Date.now()}.json`) {
+  constructor(
+    public savedFile: string = `bot_${Date.now()}.json`,
+    private io: Io
+  ) {
     try {
-      this.gameStates = readJsonSync(this.savedFile) as Record<string, Move[]>;
+      this.gameStates = this.io.readJsonSync<Record<string, Move[]>>(
+        this.savedFile
+      );
     } catch {
       this.gameStates = {};
     }
   }
 
   memorize(): void {
-    writeJsonSync(this.savedFile, this.gameStates);
+    this.io.writeJsonSync(this.savedFile, this.gameStates);
   }
 }
 
 export class Bot {
-  public game_history: HistoricalMove[] = [];
+  public game_history: HistoryEntry[] = [];
 
   constructor(
     private board: Board,
@@ -79,11 +84,9 @@ export class Bot {
   }
 
   make_move(move: Move): void {
-    this.game_history.push(
-      new HistoricalMove(move, this.team, this.board.key())
-    );
+    this.game_history.push(new HistoryEntry(move, this.team, this.board.key()));
 
-    this.board.setByIndex(move.index, this.team);
+    this.board.set_by_index(move.index, this.team);
   }
 
   learn(didIWin: boolean) {
@@ -102,7 +105,7 @@ export class Bot {
       }
 
       if (didIWin) {
-        const isLastMove = i === this.game_history.length;
+        const isLastMove = i === this.game_history.length - 1;
 
         // If the bot won that means the last move it made was the winning move
         current.count += isLastMove ? 100 : 3;

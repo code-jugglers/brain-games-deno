@@ -17,7 +17,7 @@ export class Board {
   private readonly visual_cache = new Map<string, string>();
   private readonly result_cache = new Map<string, GameResult>();
 
-  spaces: BoardSpace[] = this.createSpaces();
+  spaces: BoardSpace[] = this.create_spaces();
 
   set(row: number, col: number, team: BoardSpace) {
     const i = row * 3 + col;
@@ -25,12 +25,12 @@ export class Board {
     this.spaces[i] = team;
   }
 
-  setByIndex(index: number, team: BoardSpace) {
+  set_by_index(index: number, team: BoardSpace) {
     this.spaces[index] = team;
   }
 
   reset() {
-    this.spaces = this.createSpaces();
+    this.spaces = this.create_spaces();
   }
 
   key() {
@@ -44,15 +44,7 @@ export class Board {
       return this.visual_cache.get(key) as string;
     }
 
-    const visual = this.spaces.reduce((b, team, i) => {
-      if (!(i % 3)) {
-        b += "\n";
-      }
-
-      b += team + " ";
-
-      return b;
-    }, "");
+    const visual = this.generate_visual();
 
     this.visual_cache.set(key, visual);
 
@@ -73,33 +65,45 @@ export class Board {
     return result;
   }
 
+  private generate_visual(): string {
+    return this.spaces.reduce((b, team, i) => {
+      if (!(i % 3)) {
+        b += "\n";
+      }
+
+      b += team + " ";
+
+      return b;
+    }, "");
+  }
+
   private find_result(): GameResult {
     let result: GameResult = GameResult.Incomplete;
 
-    if (this.checkBoard(0, 1, 2)) {
+    if (this.check_board(0, 1, 2)) {
       // row 1
-      result = this.boardSpaceToResult(this.spaces[0]);
-    } else if (this.checkBoard(3, 4, 5)) {
+      result = this.board_space_to_result(this.spaces[0]);
+    } else if (this.check_board(3, 4, 5)) {
       // row 2
-      result = this.boardSpaceToResult(this.spaces[3]);
-    } else if (this.checkBoard(6, 7, 8)) {
+      result = this.board_space_to_result(this.spaces[3]);
+    } else if (this.check_board(6, 7, 8)) {
       // row3
-      result = this.boardSpaceToResult(this.spaces[6]);
-    } else if (this.checkBoard(0, 3, 6)) {
+      result = this.board_space_to_result(this.spaces[6]);
+    } else if (this.check_board(0, 3, 6)) {
       // col 1
-      result = this.boardSpaceToResult(this.spaces[0]);
-    } else if (this.checkBoard(1, 4, 7)) {
+      result = this.board_space_to_result(this.spaces[0]);
+    } else if (this.check_board(1, 4, 7)) {
       // col 2
-      result = this.boardSpaceToResult(this.spaces[1]);
-    } else if (this.checkBoard(2, 5, 8)) {
+      result = this.board_space_to_result(this.spaces[1]);
+    } else if (this.check_board(2, 5, 8)) {
       // col 3
-      result = this.boardSpaceToResult(this.spaces[2]);
-    } else if (this.checkBoard(0, 4, 8)) {
+      result = this.board_space_to_result(this.spaces[2]);
+    } else if (this.check_board(0, 4, 8)) {
       // Diagonal top-left > bottom-right
-      result = this.boardSpaceToResult(this.spaces[0]);
-    } else if (this.checkBoard(2, 4, 6)) {
+      result = this.board_space_to_result(this.spaces[0]);
+    } else if (this.check_board(2, 4, 6)) {
       // Diagonal top-right > bottom-left
-      result = this.boardSpaceToResult(this.spaces[2]);
+      result = this.board_space_to_result(this.spaces[2]);
     } else if (this.spaces.every((space) => space !== BoardSpace.Empty)) {
       // Every space is full and no winner was found above
       result = GameResult.Tie;
@@ -108,7 +112,7 @@ export class Board {
     return result;
   }
 
-  private boardSpaceToResult(space: BoardSpace): GameResult {
+  private board_space_to_result(space: BoardSpace): GameResult {
     switch (space) {
       case BoardSpace.X:
         return GameResult.WinX;
@@ -121,11 +125,11 @@ export class Board {
     }
   }
 
-  private createSpaces() {
+  private create_spaces() {
     return new Array(this.cols * this.rows).fill(BoardSpace.Empty);
   }
 
-  private checkBoard(first: number, second: number, third: number): boolean {
+  private check_board(first: number, second: number, third: number): boolean {
     const squares = this.spaces;
 
     return (

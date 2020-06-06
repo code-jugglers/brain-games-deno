@@ -1,4 +1,5 @@
-import { assertEquals } from "./deps_testing.ts";
+import { assertEquals } from "https://deno.land/std@0.55.0/testing/asserts.ts";
+
 import { Board, BoardSpace, GameResult } from "./board.ts";
 
 const { test } = Deno;
@@ -34,9 +35,9 @@ test("should set a space on the board based on row and column", () => {
 test("should reset the board to empty", () => {
   const board = new Board();
 
-  board.setByIndex(0, BoardSpace.X);
-  board.setByIndex(1, BoardSpace.O);
-  board.setByIndex(2, BoardSpace.X);
+  board.set_by_index(0, BoardSpace.X);
+  board.set_by_index(1, BoardSpace.O);
+  board.set_by_index(2, BoardSpace.X);
 
   board.reset();
 
@@ -47,8 +48,8 @@ test("should reset the board to empty", () => {
 test("should set a space on the board based on an index", () => {
   const board = new Board();
 
-  board.setByIndex(0, BoardSpace.X);
-  board.setByIndex(1, BoardSpace.O);
+  board.set_by_index(0, BoardSpace.X);
+  board.set_by_index(1, BoardSpace.O);
 
   assertEquals(board.spaces, [
     BoardSpace.X,
@@ -91,8 +92,6 @@ test("x should win on the bottom row", () => {
   board.set(2, 0, BoardSpace.X);
   board.set(2, 1, BoardSpace.X);
   board.set(2, 2, BoardSpace.X);
-
-  console.log(board.determine_result());
 
   assertEquals(board.determine_result(), GameResult.WinX);
 });
